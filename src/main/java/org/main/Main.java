@@ -10,8 +10,6 @@ public class Main {
         //Get the old list from the JSON file
         SaveController.retrieveData();
 
-        System.out.println("Teste");
-
         //Start the main application
         MenuMain.start();
 
