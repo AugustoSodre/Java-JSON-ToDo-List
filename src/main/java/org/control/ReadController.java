@@ -1,0 +1,92 @@
+package org.control;
+
+import org.model.Task;
+import org.model.TaskList;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class ReadController {
+
+    static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+    public static int askFilter() {
+
+        int option = -1;
+        while (option < 1 || option > 3) {
+            System.out.println("Order by:");
+            System.out.println("1. Priority");
+            System.out.println("2. Category");
+            System.out.println("3. Status");
+            System.out.println();
+            System.out.print("Enter option: ");
+
+            try {
+                option = Integer.parseInt(reader.readLine());
+            } catch (Exception e) {
+                System.out.println("Invalid option");
+            }
+
+
+        }
+        return option;
+    }
+
+    public static void read(int option) {
+        switch (option) {
+            case 1:
+                //Priority (Regular) sorting
+                for (Task t : TaskList.getTaskList()) {
+                    System.out.println(t.toString());
+                }
+                break;
+
+            case 2:
+                //Category Sorting
+                List<Task> tempList = null;
+                tempList = new ArrayList<>(TaskList.getTaskList());
+                tempList.sort(Comparator.comparing(Task::getCategory));
+                for (Task t : tempList) {
+                    System.out.println(t.toString());
+                }
+                break;
+
+            case 3:
+                //Status Sorting
+                tempList = new ArrayList<>(TaskList.getTaskList());
+                tempList.sort(Comparator.comparing(Task::getStatus));
+                for (Task t : tempList) {
+                    System.out.println(t.toString());
+                }
+                break;
+        }
+        System.out.println();
+
+        int todoTasks = 0;
+        int doneTasks = 0;
+        int doingTasks = 0;
+
+        for(Task t : TaskList.getTaskList()) {
+            if(t.getStatus().equals("DONE")) {
+                doneTasks += 1;
+            } else if (t.getStatus().equals("TODO")){
+                todoTasks += 1;
+            } else{
+                doingTasks += 1;
+            }
+        }
+
+        System.out.println();
+        System.out.println("TODO tasks: " + todoTasks);
+        System.out.println("DOING tasks: " + doingTasks);
+        System.out.println("DONE tasks: " + doneTasks);
+
+    }
+
+    public static void start() {
+        read(askFilter());
+    }
+}
