@@ -28,7 +28,7 @@ public class TaskList {
         if(taskList.size() > 0){
             List<Task> tempListForId = taskList;
             tempListForId.sort(Comparator.comparing(Task::getId));
-            TaskList.setId(tempListForId.getLast().getId());
+            TaskList.setId( (tempListForId.getLast().getId() ) + 1);
         } else{
             setId(0);
         }
