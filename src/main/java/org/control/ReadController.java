@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ReadController {
 
@@ -36,12 +37,14 @@ public class ReadController {
     }
 
     public static void read(int option) {
+        Stream<Task> taskStream = TaskList.getTaskList().stream();
+
         switch (option) {
             case 1:
                 //Priority (Regular) sorting
-                for (Task t : TaskList.getTaskList()) {
-                    System.out.println(t.toString());
-                }
+                taskStream.sorted(
+                        Comparator.comparing(Task::getPriority).reversed())
+                        .forEach(System.out::println);
                 break;
 
             case 2:
