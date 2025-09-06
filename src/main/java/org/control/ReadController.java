@@ -49,21 +49,16 @@ public class ReadController {
 
             case 2:
                 //Category Sorting
-                List<Task> tempList = null;
-                tempList = new ArrayList<>(TaskList.getTaskList());
-                tempList.sort(Comparator.comparing(Task::getCategory));
-                for (Task t : tempList) {
-                    System.out.println(t.toString());
-                }
+                taskStream.sorted(
+                        Comparator.comparing(Task::getCategory).reversed())
+                        .forEach(System.out::println);
                 break;
 
             case 3:
                 //Status Sorting
-                tempList = new ArrayList<>(TaskList.getTaskList());
-                tempList.sort(Comparator.comparing(Task::getStatus));
-                for (Task t : tempList) {
-                    System.out.println(t.toString());
-                }
+                taskStream.sorted(
+                        Comparator.comparing(Task::getStatus).reversed())
+                        .forEach(System.out::println);
                 break;
         }
         System.out.println();
