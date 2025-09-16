@@ -5,10 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List FrontEnd</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
+    <div>
 
-    <script src="js/main.js"></script>
+    </div>
+
+    <div id="new_task_container">
+        <h2>Create new Task:</h2>
+        <form id="new_task_form">
+            <input type="text"   name="name"        id="form_new_name" placeholder="Task Name">
+            <input type="text"   name="description" id="form_new_description" placeholder="Some Description">
+            <input type="date"   name="date"        id="form_new_date">
+
+            <select name="priority" id="form_priority">
+                <option value=1>1 (Low)</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5 (High)</option>
+            </select>
+
+            <input type="text"   name="category"    id="form_new_category" placeholder="Some Category">
+
+            <select name="status" id="form_status">
+                <option value="TODO">To-Do</option>
+                <option value="DOING">Doing</option>
+                <option value="DONE">Done</option>
+            </select>
+
+            <button type="submit" id="create_task">Create</button>
+        </form>
+
+    </div>
+    
+
+    <script src="../js/main.js"></script>
 </body>
 </html>
