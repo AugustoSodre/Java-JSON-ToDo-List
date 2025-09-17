@@ -1,3 +1,6 @@
+//Defining Global ID
+let global_id = 0
+
 //Defining Task Class
 class Task{
     constructor(name, description, deadline, priority, category, task_status) {
@@ -8,7 +11,7 @@ class Task{
         this.category = category;
         this.task_status = task_status;
     }
-
+    
     id = ""
 }
 
@@ -21,7 +24,17 @@ if(!localStorage.getItem("task_list")){
 
 task_list = JSON.parse(localStorage.getItem("task_list"))
 
+//Setting up the global_id
+for(i = 0; i < task_list.length; i++){
+    biggest_id = task_list[i].id
+
+    if(biggest_id >= global_id){
+        global_id = (biggest_id) + 1
+    }
+}
+
 console.log(task_list)
+console.log("Global ID: " + global_id)
 
 
 //Handling the Create Task form - Create (C) operation
@@ -56,13 +69,17 @@ document.getElementById("new_task_form").addEventListener("submit", function (){
     //Creating a new task assigning respective items to the constructor
     const new_task = new Task(name, description, 
         deadline, priority, category, task_status)
-
+    
+    //Setting its ID
+    new_task.id = global_id
+    global_id += 1
 
     //Pushing the new created task to the task list
     task_list.push(new_task)
     
     //Saving the new item in the localstorage
     localStorage.setItem("task_list" , JSON.stringify(task_list))
+    
     // Reset form and re-render lists
     document.getElementById("new_task_form").reset()
     renderTasks()
@@ -74,49 +91,59 @@ let doing_list = []
 let done_list  = []
 
 function organize_lists(){
+
+    todo_list  = []
+    doing_list = []
+    done_list  = []
+
     for(i = 0; i < task_list.length; i++){
-    task_list[i].id = i //A task's id equals its position in the global array
+        
+        try{
+            switch(task_list[i].task_status){
+                case "TODO":
+                    todo_list.push(task_list[i])
+                    break
+                    
+                case "DOING":
+                    doing_list.push(task_list[i])
+                    break
 
-    switch(task_list[i].task_status){
-        case "TODO":
-            todo_list.push(task_list[i])
-            break
-            
-        case "DOING":
-            doing_list.push(task_list[i])
-            break
+                case "DONE":
+                    done_list.push(task_list[i])
+                    break
 
-        case "DONE":
-            done_list.push(task_list[i])
-            break
-
-        default:
-            console.log("Invalid task" + task_list[i])
-            break
+                default:
+                    console.log("Invalid task" + task_list[i])
+                    break
+                }
+        } catch (exception){
+            console.log(exception)
+        }
     }
-}
+    
 }
 
-console.log(todo_list)
-console.log(doing_list)
-console.log(done_list)
+
 
 function create_task_HTML(list_to_add){
 
     let container
-
-    switch (list_to_add[0].task_status){
-        case "TODO":
-            container = document.getElementById('todo_list')
-            break
-        case "DOING":
-            container = document.getElementById('doing_list')
-            break
-        case "DONE":
-            container = document.getElementById('done_list')
-            break
-        default:
-            break
+    try{
+        switch (list_to_add[0].task_status){
+            case "TODO":
+                container = document.getElementById('todo_list')
+                break
+            case "DOING":
+                container = document.getElementById('doing_list')
+                break
+            case "DONE":
+                container = document.getElementById('done_list')
+                break
+            default:
+                break
+        }
+    } catch (exception) {
+        console.log(exception)
     }
 
     list_to_add.forEach(task => {
@@ -128,17 +155,17 @@ function create_task_HTML(list_to_add){
         header.className = 'header_task'
 
         const btnGroup = document.createElement('div')
+
         const editBtn = document.createElement('button')
         editBtn.textContent = 'Edit'
-        editBtn.dataset.action = 'edit'
-        editBtn.dataset.id = task.id
-        editBtn.className = 'list_head_btn'
+        editBtn.class = 'edit_task'
         
         const deleteBtn = document.createElement('button')
         deleteBtn.textContent = 'Delete'
-        deleteBtn.dataset.action = 'delete'
-        deleteBtn.dataset.id = task.id
-        deleteBtn.className = 'list_head_btn'
+        deleteBtn.class = 'delete_task'
+        deleteBtn.onclick = function (){
+            deleteTask(task.id)
+        }
 
         btnGroup.appendChild(editBtn)
         btnGroup.appendChild(deleteBtn)
@@ -151,6 +178,10 @@ function create_task_HTML(list_to_add){
         const descLabel = document.createElement('label')
         descLabel.htmlFor = "description"
         descLabel.textContent = "Description: " + task.description
+
+        const dateLabel = document.createElement('label')
+        dateLabel.htmlFor = "deadline"
+        dateLabel.textContent = "Deadline: " + task.deadline
 
         const priorityLabel = document.createElement('label')
         priorityLabel.htmlFor = "priority"
@@ -175,6 +206,7 @@ function renderTasks(){
     // Rebuild lists from task_list
     organize_lists()
 
+    //Create their HTML
     create_task_HTML(todo_list)
 
     create_task_HTML(doing_list)
@@ -183,47 +215,24 @@ function renderTasks(){
 
 }
 
+//Updating tasks - Update (U) operation
+
+
+
+//Deleting tasks - Delete (D) operation
+function deleteTask(id){
+    
+    for(i = 0; i < task_list.length; i++){
+        if(task_list[i].id == id){
+            task_list.splice(i, 1);
+        }
+    }
+
+    localStorage.setItem('task_list', JSON.stringify(task_list))
+    
+    window.location.reload()
+}
+
 // Initial render
 renderTasks()
 
-// // Event delegation for edit/delete buttons inside the list containers
-// ['todo_list', 'doing_list', 'done_list'].forEach(containerId => {
-//     const container = document.getElementById(containerId)
-//     if(!container) return
-//     container.addEventListener('click', function(e){
-//         const btn = e.target
-//         if(!btn || !btn.dataset) return
-//         const action = btn.dataset.action
-//         const id = Number(btn.dataset.id)
-//         if(!action || Number.isNaN(id)) return
-//         if(action === 'delete') deleteTask(id)
-//         if(action === 'edit') editTask(id)
-//     })
-// })
-
-
-
-
-function deleteTask(id){
-    task_list.splice(id, 1)
-    localStorage.setItem('task_list', JSON.stringify(task_list))
-    renderTasks()
-}
-
-function editTask(id){
-    // Simple inline edit: prompt for new name and description
-    const t = task_list[id]
-    const newName = prompt('Edit task name:', t.name)
-    if(newName === null) return // cancelled
-    const newDesc = prompt('Edit task description:', t.description)
-    if(newDesc === null) return
-    t.name = newName
-    t.description = newDesc
-    localStorage.setItem('task_list', JSON.stringify(task_list))
-    renderTasks()
-}
-
-//Updating tasks - Update (U) operation
-
-//Deleting tasks - Delete (D) operation
-//pegar o parentNode ? - Pesquisar sobre
