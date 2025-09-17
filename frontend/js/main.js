@@ -197,6 +197,7 @@ function create_task_HTML(list_to_add){
         div.appendChild(header)
         div.appendChild(nameLabel)
         div.appendChild(descLabel)
+        div.appendChild(dateLabel)
         div.appendChild(priorityLabel)
         div.appendChild(categoryLabel)
 
