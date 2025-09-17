@@ -36,37 +36,38 @@ for(i = 0; i < task_list.length; i++){
 console.log(task_list)
 console.log("Global ID: " + global_id)
 
+//Helpers for handling the forms
+function getCurrentPriority(form_priority_id){
+        let array_options = document.getElementById(form_priority_id).options
+        for(i = 0; i < array_options.length; i++){
+            if(array_options[i].selected){
+                return array_options[i].value
+            }
+        }
+    }
+
+function getCurrentStatus(form_status_id){
+        let array_options = document.getElementById(form_status_id).options
+        for(i = 0; i < array_options.length; i++){
+            if(array_options[i].selected){
+                return array_options[i].value
+            }
+        }
+    }
 
 //Handling the Create Task form - Create (C) operation
 document.getElementById("new_task_form").addEventListener("submit", function (){
 
-    function getCurrentPriority(){
-        let array_options = document.getElementById("form_new_priority").options
-        for(i = 0; i < array_options.length; i++){
-            if(array_options[i].selected){
-                return array_options[i].value
-            }
-        }
-    }
-
-    function getCurrentStatus(){
-        let array_options = document.getElementById("form_new_status").options
-        for(i = 0; i < array_options.length; i++){
-            if(array_options[i].selected){
-                return array_options[i].value
-            }
-        }
-    }
-
-    //let id          = task_list.length ? 0 : task_list[ (task_list.length - 1) ].id + 1
     let name        = document.getElementById("form_new_name").value;
     let description = document.getElementById("form_new_description").value;
     let deadline    = document.getElementById("form_new_date").value;
-    let priority    = getCurrentPriority()
-    let category    = document.getElementById("form_new_name").value;
-    let task_status = getCurrentStatus()
+    let priority    = getCurrentPriority("form_new_priority")
+    let category    = document.getElementById("form_new_category").value;
+    let task_status = getCurrentStatus("form_new_status")
 
     //Creating a new task assigning respective items to the constructor
+    console.log(deadline)
+
     const new_task = new Task(name, description, 
         deadline, priority, category, task_status)
     
@@ -124,7 +125,6 @@ function organize_lists(){
 }
 
 
-
 function create_task_HTML(list_to_add){
 
     let container
@@ -159,6 +159,9 @@ function create_task_HTML(list_to_add){
         const editBtn = document.createElement('button')
         editBtn.textContent = 'Edit'
         editBtn.class = 'edit_task'
+        editBtn.onclick = function (){
+            updateTask(task.id)
+        }
         
         const deleteBtn = document.createElement('button')
         deleteBtn.textContent = 'Delete'
@@ -217,6 +220,68 @@ function renderTasks(){
 
 //Updating tasks - Update (U) operation
 
+function toggleActionVisibility(element){
+    if(element.style["display"] == "flex"){
+        element.style["display"] = "none"
+    } 
+    else{
+        element.style["display"] = "flex"
+    }
+}
+
+function updateTask(id){
+    let create_container = document.getElementById("new_task_container")
+    let update_container = document.getElementById("update_task_container")
+
+    toggleActionVisibility(create_container)
+    toggleActionVisibility(update_container)
+
+    let current_task
+    task_list.forEach(element => {
+        if (element.id == id){
+            current_task = element
+        }
+    })
+
+    document.getElementById("form_update_name").value        = current_task.name
+    document.getElementById("form_update_description").value = current_task.description
+    document.getElementById("form_update_date").value        = current_task.deadline
+    document.getElementById("form_update_priority").value    = current_task.priority
+    document.getElementById("form_update_category").value    = current_task.category
+    document.getElementById("form_update_status").value      = current_task.task_status
+
+
+    //Handling the Update Form
+    document.getElementById("update_task").addEventListener("submit", function (){
+        
+    let name        = document.getElementById("form_update_name").value;
+    let description = document.getElementById("form_update_description").value;
+    let deadline    = document.getElementById("form_update_date").value;
+    let priority    = getCurrentPriority("form_update_priority")
+    let category    = document.getElementById("form_update_category").value;
+    let task_status = getCurrentStatus("form_update_status")
+
+    //Creating a new task assigning respective items to the constructor
+    const new_task = new Task(name, description, 
+        deadline, priority, category, task_status)
+    
+    //Setting its ID
+    new_task.id = global_id
+    global_id += 1
+
+    //Pushing the new created task to the task list
+    task_list.push(new_task)
+    
+    //Saving the new item in the localstorage
+    localStorage.setItem("task_list" , JSON.stringify(task_list))
+    
+    // Reset form and re-render lists
+    document.getElementById("new_task_form").reset()
+    renderTasks()
+    })
+
+    
+}
 
 
 //Deleting tasks - Delete (D) operation
@@ -235,4 +300,3 @@ function deleteTask(id){
 
 // Initial render
 renderTasks()
-

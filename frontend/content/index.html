@@ -39,7 +39,8 @@
 
     </div>
 
-    <div id="new_task_container">
+    <div id="show_action_container">
+        <div id="new_task_container" style="display: flex;">
         <h2>Create new Task:</h2>
         <form id="new_task_form">
             <input type="text"   name="name"        id="form_new_name" placeholder="Task Name" required>
@@ -66,6 +67,37 @@
         </form>
 
     </div>
+
+    <div id="update_task_container">
+        <h2>Update Task:</h2>
+        <form id="update_task_form">
+            <input type="text"   name="name"        id="form_update_name" placeholder="Task Name" required>
+            <input type="text"   name="description" id="form_update_description" placeholder="Some Description" required>
+            <input type="date"   name="date"        id="form_update_date" required>
+
+            <select name="priority" id="form_update_priority" required>
+                <option value=1>1 (Low)</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5 (High)</option>
+            </select>
+
+            <input type="text"   name="category"    id="form_update_category" placeholder="Some Category" required>
+
+            <select name="status" id="form_update_status" required>
+                <option value="TODO">To-Do</option>
+                <option value="DOING">Doing</option>
+                <option value="DONE">Done</option>
+            </select>
+
+            <button type="submit" id="update_task">Update</button>
+        </form>
+
+    </div>
+    </div>
+
+    
     
 
     <script src="../js/main.js"></script>
