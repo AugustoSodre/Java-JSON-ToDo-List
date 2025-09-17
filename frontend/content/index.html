@@ -14,6 +14,16 @@
 
 <body>
 
+    <div id="show_update_selected_container" style="display: none;">
+        <label for="status">Status:</label>
+        <select name="status" id="form_update_selected" required>
+                <option value="TODO">To-Do</option>
+                <option value="DOING">Doing</option>
+                <option value="DONE">Done</option>
+        </select>
+        <button id="btn_update_selected">Update</button>
+    </div>
+
     <div id="show_all_tasks_container">
 
         <div id="show_todo_container">

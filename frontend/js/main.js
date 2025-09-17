@@ -54,7 +54,7 @@ function getCurrentStatus(form_status_id){
         }
     }
 
-//Handling the Create Task form - Create (C) operation
+//-- Handling the Create Task form - Create (C) operation
 document.getElementById("new_task_form").addEventListener("submit", function (){
 
     let name        = document.getElementById("form_new_name").value;
@@ -83,10 +83,13 @@ document.getElementById("new_task_form").addEventListener("submit", function (){
     renderTasks()
 })
 
-//Organizing the tasks into lists 
+
+//Helpers for Read (R) operation
 let todo_list  = []
 let doing_list = []
 let done_list  = []
+
+let selected_tasks = []
 
 function organize_lists(){
 
@@ -170,8 +173,34 @@ function create_task_HTML(list_to_add){
             deleteTask(task.id)
         }
 
+        const selectedBtn = document.createElement('input')
+        selectedBtn.type = "checkbox"
+        selectedBtn.addEventListener("change", function (){
+            if(selectedBtn.checked){
+                selected_tasks.push(task)
+                
+                document.getElementById("show_update_selected_container").style["display"] = "flex"
+
+            } else{
+                let task_index
+                for(let i = 0; i < selected_tasks.length; i++){
+                    if(selected_tasks[i].id == task.id){
+                        task_index = i
+                    }
+                }
+                selected_tasks.splice(task_index, 1)
+
+                if(selected_tasks.length == 0){
+                    document.getElementById("show_update_selected_container").style["display"] = "none"
+                }
+            }
+
+            console.log(selected_tasks)
+        })
+
         btnGroup.appendChild(editBtn)
         btnGroup.appendChild(deleteBtn)
+        btnGroup.appendChild(selectedBtn)
         header.appendChild(btnGroup)
 
         const nameLabel = document.createElement('label')
@@ -205,7 +234,7 @@ function create_task_HTML(list_to_add){
     })
 }
 
-// Render function for all lists - Read (R) operation
+//--- Render function for all lists - Read (R) operation
 function renderTasks(){
     // Rebuild lists from task_list
     organize_lists()
@@ -220,7 +249,7 @@ function renderTasks(){
 }
 
 
-//Updating tasks - Update (U) operation
+//--- Updating tasks - Update (U) operation
 let updating_task_id
 
 function updateTask(id){
@@ -282,7 +311,7 @@ document.getElementById("update_task").onclick = function (){
 }
 
 
-//Deleting tasks - Delete (D) operation
+//--- Deleting tasks - Delete (D) operation
 function deleteTask(id){
     
     for(i = 0; i < task_list.length; i++){
@@ -293,6 +322,25 @@ function deleteTask(id){
 
     localStorage.setItem('task_list', JSON.stringify(task_list))
     
+    window.location.reload()
+}
+
+
+//Handling the multiple changing btn
+document.getElementById("btn_update_selected").onclick = function() {
+
+    let new_task_status = document.getElementById("form_update_selected").value
+
+    selected_tasks.forEach((element) => {
+        for (i = 0; i < task_list.length; i++){
+            if(task_list[i].id == element.id){
+                task_list[i].task_status = new_task_status
+            }
+        }
+    });
+
+    localStorage.setItem('task_list', JSON.stringify(task_list))    
+
     window.location.reload()
 }
 
