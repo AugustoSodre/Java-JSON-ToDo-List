@@ -42,6 +42,20 @@ footer{
     width: 150px;
 }
 
+#show_doing_container{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+}
+
+#show_done_container{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+}
+
 #todo_list {
     border-radius: 5%;
     align-items: center;
@@ -53,15 +67,23 @@ footer{
 }
 
 #doing_list{
+    border-radius: 5%;
+    align-items: center;
+    width: 180px;
     display: flex;
     flex-direction: column;
     background-color: green;
+    gap: 5px;
 }
 
 #done_list{
+    border-radius: 5%;
+    align-items: center;
+    width: 180px;
     display: flex;
     flex-direction: column;
     background-color: red;
+    gap: 5px;
 }
 
 #new_task_container{
