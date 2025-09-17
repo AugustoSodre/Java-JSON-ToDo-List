@@ -125,7 +125,6 @@ function organize_lists(){
     
 }
 
-
 function create_task_HTML(list_to_add){
 
     let container
@@ -219,17 +218,8 @@ function renderTasks(){
 
 }
 
+
 //Updating tasks - Update (U) operation
-
-function toggleActionVisibility(element){
-    if(element.style["display"] == "flex"){
-        element.style["display"] = "none"
-    } 
-    else{
-        element.style["display"] = "flex"
-    }
-}
-
 let updating_task_id
 
 function updateTask(id){
@@ -288,7 +278,7 @@ document.getElementById("update_task").onclick = function (){
     // Reset form and re-render lists
     document.getElementById("update_task_form").reset()
     window.location.reload()
-    }
+}
 
 
 //Deleting tasks - Delete (D) operation
