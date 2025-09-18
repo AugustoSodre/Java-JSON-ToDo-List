@@ -344,5 +344,6 @@ document.getElementById("btn_update_selected").onclick = function() {
     window.location.reload()
 }
 
+
 // Initial render
 renderTasks()
